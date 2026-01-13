@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import NextImage from "next/image";
 import { useScroll, useTransform, motion, useSpring } from "framer-motion";
 import { Container, Heading, Text } from "./ui-primitives";
-import { cn } from "./ui-primitives"; // Assuming cn is exported from ui-primitives or lib/utils
+import { cn } from "./ui-primitives";
 
 const FRAME_COUNT = 200;
 const IMAGES_DIR = "/motion-assets-autonova";
@@ -47,7 +46,11 @@ export function HeroMotionCanvas() {
                         loadedImages[i - 1] = img;
                         resolve();
                     };
-                    // Handle error if needed, but assuming assets exist
+                    img.onerror = () => {
+                        // Handle missing frames gracefully - create placeholder
+                        console.warn(`Failed to load frame ${i}`);
+                        resolve();
+                    };
                 });
                 promises.push(promise);
             }

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
 
 interface Workflow {
@@ -95,13 +96,13 @@ export function WorkflowShowcase() {
                                                 aria-label={`${workflow.title} demo video`}
                                             />
                                         ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-subtle/5">
-                                                <div className="text-center text-subtle/50 p-8">
-                                                    <div className="text-6xl mb-4 opacity-30">⚙️</div>
-                                                    <div className="text-sm">{workflow.title}</div>
-                                                    <div className="text-xs mt-2 opacity-50">n8n Workflow Screenshot</div>
-                                                </div>
-                                            </div>
+                                            <Image
+                                                src={workflow.src}
+                                                alt={`${workflow.title} workflow diagram`}
+                                                fill
+                                                className="object-contain p-4"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 800px"
+                                            />
                                         )}
                                     </div>
                                 </div>

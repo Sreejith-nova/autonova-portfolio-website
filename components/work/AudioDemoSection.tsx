@@ -28,6 +28,7 @@ const audioDemos: AudioDemo[] = [
 
 export function AudioDemoSection() {
     const [activeAudio, setActiveAudio] = useState<string | null>(null);
+    const [audioErrors, setAudioErrors] = useState<{ [key: string]: boolean }>({});
     const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({});
 
     const handlePlay = (id: string) => {
@@ -42,6 +43,10 @@ export function AudioDemoSection() {
 
     const handlePause = () => {
         setActiveAudio(null);
+    };
+
+    const handleError = (id: string) => {
+        setAudioErrors(prev => ({ ...prev, [id]: true }));
     };
 
     return (
@@ -82,19 +87,26 @@ export function AudioDemoSection() {
                                 </div>
 
                                 <div className="relative">
-                                    <audio
-                                        ref={(el) => { audioRefs.current[demo.id] = el; }}
-                                        src={demo.src}
-                                        onPlay={() => handlePlay(demo.id)}
-                                        onPause={handlePause}
-                                        controls
-                                        className="w-full h-12 rounded-sm"
-                                        style={{
-                                            filter: "invert(1) hue-rotate(180deg)",
-                                            opacity: 0.8
-                                        }}
-                                        aria-label={`${demo.label} audio demo`}
-                                    />
+                                    {audioErrors[demo.id] ? (
+                                        <div className="w-full h-12 rounded-sm bg-border/20 flex items-center justify-center text-subtle text-sm">
+                                            Audio demo coming soon
+                                        </div>
+                                    ) : (
+                                        <audio
+                                            ref={(el) => { audioRefs.current[demo.id] = el; }}
+                                            src={demo.src}
+                                            onPlay={() => handlePlay(demo.id)}
+                                            onPause={handlePause}
+                                            onError={() => handleError(demo.id)}
+                                            controls
+                                            className="w-full h-12 rounded-sm"
+                                            style={{
+                                                filter: "invert(1) hue-rotate(180deg)",
+                                                opacity: 0.8
+                                            }}
+                                            aria-label={`${demo.label} audio demo`}
+                                        />
+                                    )}
                                     {activeAudio === demo.id && (
                                         <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-1 h-6 bg-accent rounded-full" />
                                     )}

@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="text-subtle text-sm">
                         System Intelligence.
                         <br />
-                        © 2024 Autonova Systems.
+                        © 2025 Autonova Systems.
                     </div>
                 </div>
 

@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
-import { X } from "lucide-react";
+import { X, ImageIcon, Play } from "lucide-react";
 
 interface Creative {
     id: string;
@@ -14,7 +14,7 @@ interface Creative {
     alt: string;
 }
 
-// Placeholder creatives - replace with actual assets
+// Placeholder creatives - replace with actual assets when available
 const creatives: Creative[] = [
     { id: "1", type: "image", src: "/work/creatives/creative-1.jpg", alt: "AI-generated social creative" },
     { id: "2", type: "image", src: "/work/creatives/creative-2.jpg", alt: "Brand campaign visual" },
@@ -76,9 +76,14 @@ export function CreativesGallery() {
                                 className="relative aspect-square bg-border/10 rounded-sm overflow-hidden group cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
                                 aria-label={`View ${creative.alt}`}
                             >
-                                <div className="absolute inset-0 bg-subtle/20 flex items-center justify-center">
-                                    <span className="text-subtle/50 text-sm">
-                                        {creative.type === "video" ? "▶ Video" : "Image"}
+                                <div className="absolute inset-0 bg-subtle/10 flex flex-col items-center justify-center gap-2">
+                                    {creative.type === "video" ? (
+                                        <Play size={24} className="text-subtle/50" />
+                                    ) : (
+                                        <ImageIcon size={24} className="text-subtle/50" />
+                                    )}
+                                    <span className="text-subtle/50 text-xs px-2 text-center">
+                                        Coming soon
                                     </span>
                                 </div>
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
@@ -118,21 +123,19 @@ export function CreativesGallery() {
                             className="max-w-4xl max-h-[80vh] w-full"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {selectedCreative.type === "video" ? (
-                                <video
-                                    src={selectedCreative.src}
-                                    controls
-                                    autoPlay
-                                    className="w-full h-auto max-h-[80vh] rounded-sm"
-                                    aria-label={selectedCreative.alt}
-                                />
-                            ) : (
-                                <div className="relative w-full aspect-square md:aspect-video bg-subtle/10 rounded-sm flex items-center justify-center">
-                                    <span className="text-subtle">
-                                        {selectedCreative.alt}
-                                    </span>
-                                </div>
-                            )}
+                            <div className="relative w-full aspect-square md:aspect-video bg-subtle/10 rounded-sm flex flex-col items-center justify-center gap-4">
+                                {selectedCreative.type === "video" ? (
+                                    <Play size={48} className="text-subtle/50" />
+                                ) : (
+                                    <ImageIcon size={48} className="text-subtle/50" />
+                                )}
+                                <span className="text-subtle text-lg">
+                                    Content coming soon
+                                </span>
+                                <span className="text-subtle/50 text-sm">
+                                    {selectedCreative.alt}
+                                </span>
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
