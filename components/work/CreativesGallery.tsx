@@ -4,40 +4,98 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
-import { X, ImageIcon, Play } from "lucide-react";
+import { X, ImageIcon, Play, Maximize2 } from "lucide-react";
 
-interface Creative {
+// --- Types ---
+
+type BaseCreative = {
     id: string;
-    type: "image" | "video";
-    src: string;
-    thumbnail?: string;
     alt: string;
-}
+    title?: string; // For lightbox/overlay
+};
 
-// Placeholder creatives - replace with actual assets when available
-const creatives: Creative[] = [
-    { id: "1", type: "image", src: "/work/creatives/creative-1.jpg", alt: "AI-generated social creative" },
-    { id: "2", type: "image", src: "/work/creatives/creative-2.jpg", alt: "Brand campaign visual" },
-    { id: "3", type: "video", src: "/work/creatives/demo-video.mp4", thumbnail: "/work/creatives/video-thumb.jpg", alt: "Product demo video" },
-    { id: "4", type: "image", src: "/work/creatives/creative-3.jpg", alt: "Marketing collateral" },
-    { id: "5", type: "image", src: "/work/creatives/creative-4.jpg", alt: "Social media asset" },
-    { id: "6", type: "image", src: "/work/creatives/creative-5.jpg", alt: "Digital advertisement" },
+type ImageCreative = BaseCreative & {
+    type: "image";
+    src: string;
+    aspectRatio?: "square" | "portrait" | "landscape"; // For grid sizing hints
+};
+
+type VideoCreative = BaseCreative & {
+    type: "video";
+    src: string;
+    poster?: string;
+};
+
+type Creative = ImageCreative | VideoCreative;
+
+// --- Data ---
+
+const imageCreatives: ImageCreative[] = [
+    {
+        id: "img-1",
+        type: "image",
+        src: "/work/creatives/WhatsApp Image 2026-01-14 at 15.47.56.jpeg",
+        alt: "Creative Campaign Visual 1",
+        title: "Brand System",
+        aspectRatio: "portrait",
+    },
+    {
+        id: "img-2",
+        type: "image",
+        src: "/work/creatives/WhatsApp Image 2026-01-14 at 15.47.56 (1).jpeg",
+        alt: "Creative Campaign Visual 2",
+        title: "Editorial Layout",
+        aspectRatio: "landscape",
+    },
+    {
+        id: "img-3",
+        type: "image",
+        src: "/work/creatives/WhatsApp Image 2026-01-14 at 15.47.56 (2).jpeg",
+        alt: "Creative Campaign Visual 3",
+        title: "Visual Identity",
+        aspectRatio: "square",
+    },
 ];
 
-export function CreativesGallery() {
-    const [selectedCreative, setSelectedCreative] = useState<Creative | null>(null);
+const videoCreatives: VideoCreative[] = [
+    {
+        id: "vid-1",
+        type: "video",
+        src: "/work/creatives/WhatsApp Video 2026-01-14 at 15.24.08.mp4",
+        alt: "Campaign Motion Video",
+        title: "Motion Identity",
+    },
+    {
+        id: "vid-2",
+        type: "video",
+        src: "/work/creatives/IMG_5236.MP4",
+        alt: "Social Media Reel",
+        title: "Social Experience",
+    },
+    {
+        id: "vid-3",
+        type: "video",
+        src: "/work/creatives/IMG_5233.MP4",
+        alt: "Brand Mood Film",
+        title: "Atmosphere",
+    },
+];
 
-    const openLightbox = (creative: Creative) => {
-        setSelectedCreative(creative);
+// --- Components ---
+
+export function CreativesGallery() {
+    const [lightboxItem, setLightboxItem] = useState<Creative | null>(null);
+
+    const openLightbox = (item: Creative) => {
+        setLightboxItem(item);
         document.body.style.overflow = "hidden";
     };
 
     const closeLightbox = useCallback(() => {
-        setSelectedCreative(null);
+        setLightboxItem(null);
         document.body.style.overflow = "auto";
     }, []);
 
-    // Close on escape key
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") closeLightbox();
@@ -47,99 +105,214 @@ export function CreativesGallery() {
     }, [closeLightbox]);
 
     return (
-        <Section className="bg-background relative z-10 border-b border-border/10">
+        <Section className="bg-background relative z-10">
             <Container>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                >
-                    <div className="mb-16">
-                        <h3 className="text-sm font-medium uppercase tracking-widest text-subtle mb-4">
+                {/* Header */}
+                <div className="mb-20 md:mb-32 max-w-2xl">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                    >
+                        <h3 className="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-subtle mb-6">
                             AI Creatives
                         </h3>
-                        <Heading as="h2" className="text-3xl md:text-4xl">
-                            Visual execution
+                        <Heading as="h2" className="text-4xl md:text-5xl lg:text-6xl mb-6">
+                            Selected visual systems and campaigns
                         </Heading>
-                    </div>
+                        <Text className="max-w-lg text-lg text-subtle/80">
+                            A curation of generated imagery and motion design, demonstrating high-fidelity outputs for modern brands.
+                        </Text>
+                    </motion.div>
+                </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                        {creatives.map((creative, index) => (
-                            <motion.button
-                                key={creative.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.05 }}
-                                viewport={{ once: true }}
-                                onClick={() => openLightbox(creative)}
-                                className="relative aspect-square bg-border/10 rounded-sm overflow-hidden group cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                                aria-label={`View ${creative.alt}`}
-                            >
-                                <div className="absolute inset-0 bg-subtle/10 flex flex-col items-center justify-center gap-2">
-                                    {creative.type === "video" ? (
-                                        <Play size={24} className="text-subtle/50" />
-                                    ) : (
-                                        <ImageIcon size={24} className="text-subtle/50" />
-                                    )}
-                                    <span className="text-subtle/50 text-xs px-2 text-center">
-                                        Coming soon
-                                    </span>
-                                </div>
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                            </motion.button>
+                {/* Subsection 1: Image Gallery */}
+                <div className="mb-32 md:mb-48">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                        {imageCreatives.map((item, index) => (
+                            <ImageCard
+                                key={item.id}
+                                item={item}
+                                index={index}
+                                onClick={() => openLightbox(item)}
+                            />
                         ))}
                     </div>
-                </motion.div>
-            </Container>
+                </div>
 
-            {/* Lightbox Modal */}
-            <AnimatePresence>
-                {selectedCreative && (
+                {/* Subsection 2: Video Gallery */}
+                <div>
                     <motion.div
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 md:p-8"
-                        onClick={closeLightbox}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Media lightbox"
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="mb-12"
                     >
-                        <button
-                            onClick={closeLightbox}
-                            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full"
-                            aria-label="Close lightbox"
-                        >
-                            <X size={28} />
-                        </button>
-
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="max-w-4xl max-h-[80vh] w-full"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="relative w-full aspect-square md:aspect-video bg-subtle/10 rounded-sm flex flex-col items-center justify-center gap-4">
-                                {selectedCreative.type === "video" ? (
-                                    <Play size={48} className="text-subtle/50" />
-                                ) : (
-                                    <ImageIcon size={48} className="text-subtle/50" />
-                                )}
-                                <span className="text-subtle text-lg">
-                                    Content coming soon
-                                </span>
-                                <span className="text-subtle/50 text-sm">
-                                    {selectedCreative.alt}
-                                </span>
-                            </div>
-                        </motion.div>
+                        <h4 className="text-sm font-medium text-subtle tracking-widest uppercase">Motion & Video</h4>
                     </motion.div>
-                )}
-            </AnimatePresence>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+                        {videoCreatives.map((item, index) => (
+                            <VideoCard
+                                key={item.id}
+                                item={item}
+                                index={index}
+                                onClick={() => openLightbox(item)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </Container>
+
+            <Lightbox
+                item={lightboxItem}
+                onClose={closeLightbox}
+            />
         </Section>
+    );
+}
+
+// --- Subcomponents ---
+
+function ImageCard({ item, index, onClick }: { item: ImageCreative; index: number; onClick: () => void }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
+            className="group cursor-pointer"
+            onClick={onClick}
+        >
+            <div className="relative w-full overflow-hidden bg-subtle/5 rounded-sm aspect-[4/5] md:aspect-[3/4]">
+                {/* 
+                    Using aspect-ratio utility to enforce a consistent shape, 
+                    but letting object-cover handle the fitting.
+                    For a true masonry, we would need to know exact dimensions or use column-count CSS.
+                    Grid is safer for responsiveness.
+                 */}
+                <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+
+                {/* Minimal Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full text-white/90">
+                        <Maximize2 size={24} strokeWidth={1.5} />
+                    </div>
+                </div>
+            </div>
+            <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                <span className="text-xs uppercase tracking-wider text-subtle">{item.title}</span>
+            </div>
+        </motion.div>
+    );
+}
+
+function VideoCard({ item, index, onClick }: { item: VideoCreative; index: number; onClick: () => void }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
+        >
+            <button
+                onClick={onClick}
+                className="group relative w-full aspect-video bg-subtle/5 rounded-sm overflow-hidden block focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label={`Play ${item.title}`}
+            >
+                {/* Video Preview (muted, looping could be added if desired, but request said simple poster) */}
+                <video
+                    src={item.src}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                    preload="metadata"
+                    muted
+                />
+
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500" />
+
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 transition-transform duration-300 group-hover:scale-110 group-active:scale-95">
+                        <Play size={32} className="text-white fill-white ml-1" />
+                    </div>
+                </div>
+            </button>
+            <div className="mt-4 flex justify-between items-start">
+                <h5 className="text-sm font-medium text-foreground">{item.title}</h5>
+                <span className="text-xs text-subtle uppercase tracking-wider">Video</span>
+            </div>
+        </motion.div>
+    );
+}
+
+function Lightbox({ item, onClose }: { item: Creative | null; onClose: () => void }) {
+    return (
+        <AnimatePresence>
+            {item && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixed inset-0 z-[5000] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm cursor-pointer"
+                    onClick={onClose}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Media Lightbox"
+                >
+                    <div
+                        className="relative w-full max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center cursor-default"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {item.type === "image" ? (
+                            <img
+                                src={item.src}
+                                alt={item.alt}
+                                className="max-w-full max-h-[85vh] object-contain shadow-2xl selection:bg-transparent"
+                            />
+                        ) : (
+                            <div className="relative flex items-center justify-center w-full h-full">
+                                <video
+                                    src={item.src}
+                                    controls
+                                    className="max-w-full max-h-[85vh] object-contain shadow-2xl"
+                                    preload="auto"
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            </div>
+                        )}
+
+                        {/* Caption */}
+                        {(item.title || item.alt) && (
+                            <div className="mt-4 text-center pointer-events-none">
+                                {item.title && <p className="text-white/90 text-lg font-medium">{item.title}</p>}
+                                <p className="text-white/50 text-sm mt-1">{item.alt}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Close Button - Placed at end of DOM for stacking safety */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}
+                        className="fixed top-6 right-6 z-[5010] p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white"
+                        aria-label="Close"
+                        type="button"
+                    >
+                        <X size={32} strokeWidth={2} />
+                    </button>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
