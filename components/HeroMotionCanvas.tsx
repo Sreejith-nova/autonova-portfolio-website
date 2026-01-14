@@ -80,9 +80,11 @@ export function HeroMotionCanvas() {
             const img = images[imageIndex];
 
             if (img) {
-                // "Cover" fit
+                // "Cover" fit with mobile-specific scaling
                 const canvasRatio = canvas.width / canvas.height;
                 const imgRatio = img.width / img.height;
+                const isMobile = window.innerWidth < 768;
+                
                 let drawWidth, drawHeight, offsetX, offsetY;
 
                 if (canvasRatio > imgRatio) {
@@ -95,6 +97,16 @@ export function HeroMotionCanvas() {
                     drawHeight = canvas.height;
                     offsetX = (canvas.width - drawWidth) / 2;
                     offsetY = 0;
+                }
+
+                // Mobile-specific adjustment: ensure proper scaling for narrow viewports
+                if (isMobile && imgRatio > canvasRatio) {
+                    // For mobile portrait mode, scale to fit width and center vertically
+                    const mobileScale = Math.max(1, imgRatio / canvasRatio * 0.85);
+                    drawWidth = canvas.width * mobileScale;
+                    drawHeight = drawWidth / imgRatio;
+                    offsetX = (canvas.width - drawWidth) / 2;
+                    offsetY = (canvas.height - drawHeight) / 2;
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
