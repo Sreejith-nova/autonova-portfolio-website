@@ -80,10 +80,10 @@ export function HeroMotionCanvas() {
             const img = images[imageIndex];
 
             if (img) {
-                // "Cover" fit with mobile-specific scaling
+                // "Cover" fit with mobile/tablet constraints to prevent overflow
                 const canvasRatio = canvas.width / canvas.height;
                 const imgRatio = img.width / img.height;
-                const isMobile = window.innerWidth < 768;
+                const isMobile = window.innerWidth < 1024; // Target phones and tablets
                 
                 let drawWidth, drawHeight, offsetX, offsetY;
 
@@ -99,14 +99,16 @@ export function HeroMotionCanvas() {
                     offsetY = 0;
                 }
 
-                // Mobile-specific adjustment: ensure proper scaling for narrow viewports
-                if (isMobile && imgRatio > canvasRatio) {
-                    // For mobile portrait mode, scale to fit width and center vertically
-                    const mobileScale = Math.max(1, imgRatio / canvasRatio * 0.85);
-                    drawWidth = canvas.width * mobileScale;
-                    drawHeight = drawWidth / imgRatio;
-                    offsetX = (canvas.width - drawWidth) / 2;
-                    offsetY = (canvas.height - drawHeight) / 2;
+                // Mobile/tablet: ensure content fits within canvas bounds
+                if (isMobile) {
+                    const maxScale = 1.0; // Prevent overflow by capping scale at 100%
+                    if (drawWidth > canvas.width) {
+                        const scale = (canvas.width / drawWidth) * maxScale;
+                        drawWidth *= scale;
+                        drawHeight *= scale;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -124,13 +126,16 @@ export function HeroMotionCanvas() {
         return () => unsubscribe();
     }, [isLoaded, images, frameIndex]);
 
-    // Handle Resize
+    // Handle Resize - constrain canvas to viewport on mobile/tablet
     useEffect(() => {
         const handleResize = () => {
-            if (canvasRef.current) {
-                canvasRef.current.width = window.innerWidth;
-                canvasRef.current.height = window.innerHeight;
-                // Trigger re-render of current frame if needed
+            if (canvasRef.current && containerRef.current) {
+                // Use container bounds to prevent overflow on mobile/tablet
+                const containerWidth = containerRef.current.offsetWidth;
+                const containerHeight = containerRef.current.offsetHeight;
+                
+                canvasRef.current.width = Math.min(window.innerWidth, containerWidth);
+                canvasRef.current.height = Math.min(window.innerHeight, containerHeight);
             }
         };
         window.addEventListener("resize", handleResize);
@@ -140,10 +145,11 @@ export function HeroMotionCanvas() {
 
     return (
         <div ref={containerRef} className="relative h-[400vh] bg-background">
-            <div className="sticky top-0 h-screen w-full overflow-hidden">
+            {/* Mobile/tablet overflow fix: ensure sticky container constrains content */}
+            <div className="sticky top-0 h-screen w-full overflow-hidden max-w-full">
                 <canvas
                     ref={canvasRef}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover max-w-full"
                 />
 
                 {/* Overlay Content */}
