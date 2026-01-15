@@ -31,7 +31,8 @@ export function ServiceSection() {
         <Section className="bg-background relative z-10 border-t border-border/10">
             <Container>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-                    <div className="sticky top-32 h-fit">
+                    {/* Mobile: static positioning for natural scroll. Desktop: sticky for pinned effect. */}
+                    <div className="md:sticky md:top-32 h-fit">
                         <Heading as="h2" className="mb-6">
                             What we actually do.
                         </Heading>
