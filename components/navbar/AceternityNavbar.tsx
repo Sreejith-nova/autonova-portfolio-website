@@ -239,7 +239,7 @@ export const NavbarLogo = () => {
       <img
         src="/autonova-logo.png"
         alt="Autonova Logo"
-        className="h-[83px] w-auto object-contain"
+        className="h-[50px] w-auto object-contain"
       />
     </a>
   );
