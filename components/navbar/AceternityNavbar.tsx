@@ -231,7 +231,18 @@ export const MobileNavToggle = ({
 };
 
 export const NavbarLogo = () => {
-  return null;
+  return (
+    <a
+      href="/"
+      className="relative z-20 flex items-center px-2 py-1"
+    >
+      <img
+        src="/autonova-logo.png"
+        alt="Autonova Logo"
+        className="h-10 w-auto object-contain"
+      />
+    </a>
+  );
 };
 
 export const NavbarButton = ({
