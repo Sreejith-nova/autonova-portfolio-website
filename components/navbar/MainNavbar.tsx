@@ -24,7 +24,6 @@ export function MainNavbar() {
   return (
     <Navbar>
       <NavBody>
-        <NavbarLogo />
         <NavItems items={navItems} />
         <NavbarButton href="https://cal.com/autonova-mfsbch/30min" variant="dark">
           Book a Call
@@ -33,7 +32,6 @@ export function MainNavbar() {
 
       <MobileNav>
         <MobileNavHeader>
-          <NavbarLogo />
           <MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </MobileNavHeader>
         <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
