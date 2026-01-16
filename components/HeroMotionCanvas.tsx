@@ -5,8 +5,8 @@ import { useScroll, useTransform, motion, useSpring } from "framer-motion";
 import { Container, Heading, Text } from "./ui-primitives";
 import { cn } from "./ui-primitives";
 
-const FRAME_COUNT = 200;
-const IMAGES_DIR = "/motion-assets-autonova";
+const FRAME_COUNT = 240;
+const IMAGES_DIR = "/section-two";
 
 export function HeroMotionCanvas() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -40,8 +40,8 @@ export function HeroMotionCanvas() {
             for (let i = 1; i <= FRAME_COUNT; i++) {
                 const promise = new Promise<void>((resolve) => {
                     const img = new Image();
-                    const paddedIndex = i.toString().padStart(3, "0");
-                    img.src = `${IMAGES_DIR}/ezgif-frame-${paddedIndex}.jpg`;
+                    const paddedIndex = i.toString().padStart(4, "0");
+                    img.src = `${IMAGES_DIR}/frame_${paddedIndex}.webp`;
                     img.onload = () => {
                         loadedImages[i - 1] = img;
                         resolve();
