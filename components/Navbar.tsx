@@ -73,7 +73,7 @@ export const NavBody = ({
         className={cn(
           "fixed inset-x-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 transition-colors md:px-8",
           scrolled
-            ? "border-b border-white/10 bg-black/50 backdrop-blur-md"
+            ? "border-b border-border bg-background/80 backdrop-blur-md"
             : "bg-transparent",
           className
         )}
@@ -146,7 +146,7 @@ export const MobileNavToggle = ({
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10 md:hidden"
+        className="flex items-center justify-center rounded-lg p-2 text-foreground transition-colors hover:bg-foreground/10 md:hidden"
         aria-label="Toggle navigation menu"
       >
         <IconMenu2 className="h-6 w-6" />
@@ -159,13 +159,13 @@ export const MobileNavToggle = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] bg-black md:hidden"
+            className="fixed inset-0 z-[100] bg-background md:hidden"
           >
             <MobileNavHeader>
               <div />
               <button
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10"
+                className="flex items-center justify-center rounded-lg p-2 text-foreground transition-colors hover:bg-foreground/10"
                 aria-label="Close navigation menu"
               >
                 <IconX className="h-6 w-6" />
@@ -189,7 +189,7 @@ export const NavbarLogo = ({
     <Link
       href="/"
       className={cn(
-        "text-xl font-bold tracking-tight text-white transition-opacity hover:opacity-80 md:text-2xl",
+        "text-xl font-bold tracking-tight text-foreground transition-opacity hover:opacity-80 md:text-2xl",
         className
       )}
     >
@@ -212,7 +212,7 @@ export const NavbarButton = ({
     <a
       href={href}
       className={cn(
-        "rounded-full border border-white/20 bg-white px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-white/90",
+        "rounded-full border border-border bg-foreground px-5 py-2 text-sm font-medium text-background transition-colors hover:bg-accent/90",
         className
       )}
       {...props}
@@ -243,8 +243,8 @@ export function AutonovaNavbar() {
   return (
     <Navbar>
       <NavBody>
-        {/* Logo */}
-        <NavbarLogo>AUTONOVA</NavbarLogo>
+        {/* Logo removed */}
+        <div />
 
         {/* Desktop Navigation */}
         <NavItems>
@@ -252,7 +252,7 @@ export function AutonovaNavbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+              className="text-sm font-medium text-subtle transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -280,13 +280,13 @@ export function AutonovaNavbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] bg-black md:hidden"
+            className="fixed inset-0 z-[100] bg-background md:hidden"
           >
             <MobileNavHeader>
               <div />
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10"
+                className="flex items-center justify-center rounded-lg p-2 text-foreground transition-colors hover:bg-foreground/10"
                 aria-label="Close navigation menu"
               >
                 <IconX className="h-6 w-6" />
@@ -316,7 +316,7 @@ export function AutonovaNavbar() {
                 >
                   <Link
                     href={link.href}
-                    className="text-3xl font-bold text-white transition-colors hover:text-white/80"
+                    className="text-3xl font-bold text-foreground transition-colors hover:text-accent"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -333,7 +333,7 @@ export function AutonovaNavbar() {
                   href="https://cal.com/autonova-mfsbch/30min"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 rounded-full border border-white/20 bg-white px-8 py-4 text-lg font-medium text-black transition-colors hover:bg-white/90"
+                  className="mt-4 rounded-full border border-border bg-foreground px-8 py-4 text-lg font-medium text-background transition-colors hover:bg-accent/90"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Book a conversation
