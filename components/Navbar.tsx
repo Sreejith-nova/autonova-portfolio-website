@@ -1,199 +1,348 @@
 "use client";
 
-import { Container } from "./ui-primitives";
-import Link from "next/link";
-import { useState, useCallback, useRef } from "react";
 import { cn } from "./ui-primitives";
-import { Menu, X } from "lucide-react";
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { IconMenu2, IconX } from "@tabler/icons-react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "motion/react";
+import React, { useRef, useState } from "react";
+import Link from "next/link";
 
-export function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [hidden, setHidden] = useState(false);
-    const navRef = useRef<HTMLElement>(null);
-    const lastScrollY = useRef(0);
+// ===================================
+// ACETERNITY UI NAVBAR COMPONENT
+// ===================================
 
-    // Aceternity-style scroll detection using motion hooks
-    const { scrollY } = useScroll();
+export const Navbar = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className={cn("w-full", className)}>
+      {children}
+    </div>
+  );
+};
 
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        const currentScrollY = latest;
-        
-        // Update background blur effect when scrolled
-        setScrolled(currentScrollY > 50);
-        
-        // Aceternity-style scroll direction detection
-        // Hide navbar when scrolling down, show when scrolling up
-        if (currentScrollY <= 50) {
-            setHidden(false);
-        } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-            // Scrolling down - hide navbar
-            setHidden(true);
-        } else if (currentScrollY < lastScrollY.current) {
-            // Scrolling up - show navbar
-            setHidden(false);
+export const NavBody = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  const navRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (current) => {
+    if (typeof current === "number") {
+      const previous = scrollY.getPrevious() ?? 0;
+      const direction = current - previous;
+
+      setScrolled(current > 50);
+
+      if (current < 50) {
+        setVisible(true);
+      } else {
+        if (direction < 0) {
+          setVisible(true);
+        } else {
+          setVisible(false);
         }
-        
-        lastScrollY.current = currentScrollY;
-    });
+      }
+    }
+  });
 
-    const closeMobileMenu = useCallback(() => {
-        setMobileMenuOpen(false);
-    }, []);
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        ref={navRef}
+        animate={{
+          y: visible ? 0 : -100,
+        }}
+        transition={{
+          duration: 0.2,
+        }}
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 transition-colors md:px-8",
+          scrolled
+            ? "border-b border-white/10 bg-black/50 backdrop-blur-md"
+            : "bg-transparent",
+          className
+        )}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
-    return (
-        <>
-            {/* Aceternity-style animated navbar with motion.nav wrapper */}
-            <motion.nav
-                ref={navRef}
-                initial={{ y: 0 }}
-                animate={{
-                    y: hidden ? -100 : 0,
-                    backdropFilter: scrolled ? "blur(10px)" : "blur(0px)",
-                }}
-                transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 30,
-                }}
-                className={cn(
-                    "fixed top-0 z-50 w-full",
-                    scrolled ? "bg-background/80 border-b border-border py-4" : "bg-transparent py-6"
-                )}
+export const NavItems = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className={cn("hidden items-center gap-8 md:flex", className)}>
+      {children}
+    </div>
+  );
+};
+
+export const MobileNav = ({ children }: { children: React.ReactNode }) => {
+  return <>{children}</>;
+};
+
+export const MobileNavHeader = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className={cn("flex items-center justify-between px-4 py-6", className)}>
+      {children}
+    </div>
+  );
+};
+
+export const MobileNavMenu = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-8 px-6 py-12",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const MobileNavToggle = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10 md:hidden"
+        aria-label="Toggle navigation menu"
+      >
+        <IconMenu2 className="h-6 w-6" />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] bg-black md:hidden"
+          >
+            <MobileNavHeader>
+              <div />
+              <button
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10"
+                aria-label="Close navigation menu"
+              >
+                <IconX className="h-6 w-6" />
+              </button>
+            </MobileNavHeader>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+export const NavbarLogo = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <Link
+      href="/"
+      className={cn(
+        "text-xl font-bold tracking-tight text-white transition-opacity hover:opacity-80 md:text-2xl",
+        className
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
+
+export const NavbarButton = ({
+  className,
+  children,
+  href,
+  ...props
+}: {
+  className?: string;
+  children: React.ReactNode;
+  href: string;
+} & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  return (
+    <a
+      href={href}
+      className={cn(
+        "rounded-full border border-white/20 bg-white px-5 py-2 text-sm font-medium text-black transition-colors hover:bg-white/90",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+};
+
+// ===================================
+// AUTONOVA NAVBAR INTEGRATION
+// ===================================
+
+export function AutonovaNavbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: "/work", label: "Work" },
+    { href: "#thinking", label: "Philosophy" },
+  ];
+
+  const mobileNavLinks = [
+    { href: "/", label: "Home" },
+    { href: "/work", label: "Work" },
+    { href: "#thinking", label: "Philosophy" },
+  ];
+
+  return (
+    <Navbar>
+      <NavBody>
+        {/* Logo */}
+        <NavbarLogo>AUTONOVA</NavbarLogo>
+
+        {/* Desktop Navigation */}
+        <NavItems>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-white/70 transition-colors hover:text-white"
             >
-                <Container className="flex items-center justify-between">
-                    <Link href="/" className="text-xl md:text-2xl font-display font-bold tracking-tight text-foreground hover:opacity-80 transition-opacity">
-                        AUTONOVA
-                    </Link>
+              {link.label}
+            </Link>
+          ))}
+          <NavbarButton
+            href="https://cal.com/autonova-mfsbch/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book a conversation
+          </NavbarButton>
+        </NavItems>
 
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-8 text-sm font-medium text-subtle">
-                        <Link href="/work" className="hover:text-foreground transition-colors">Work</Link>
-                        <Link href="#thinking" className="hover:text-foreground transition-colors">Philosophy</Link>
-                        <a
-                            href="https://cal.com/autonova-mfsbch/30min"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-5 py-2 rounded-full border border-border bg-foreground text-background hover:bg-white/90 transition-colors"
-                        >
-                            Book a conversation
-                        </a>
-                    </div>
+        {/* Mobile Navigation Toggle */}
+        <MobileNav>
+          <MobileNavToggle open={mobileMenuOpen} setOpen={setMobileMenuOpen} />
+        </MobileNav>
+      </NavBody>
 
-                    {/* Mobile Menu Button */}
-                    <button
-                        className="md:hidden p-2 text-foreground hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg"
-                        onClick={() => setMobileMenuOpen(true)}
-                        aria-label="Open navigation menu"
-                        aria-expanded={mobileMenuOpen}
-                    >
-                        <Menu size={24} />
-                    </button>
-                </Container>
-            </motion.nav>
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] bg-black md:hidden"
+          >
+            <MobileNavHeader>
+              <div />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10"
+                aria-label="Close navigation menu"
+              >
+                <IconX className="h-6 w-6" />
+              </button>
+            </MobileNavHeader>
 
-            {/* Aceternity-style animated mobile menu with AnimatePresence */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-[100] bg-background md:hidden"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Mobile navigation menu"
-                    >
-                        {/* Close Button */}
-                        <motion.button
-                            initial={{ rotate: -90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            transition={{ delay: 0.1 }}
-                            className="absolute top-6 right-4 p-2 text-foreground hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg"
-                            onClick={closeMobileMenu}
-                            aria-label="Close navigation menu"
-                        >
-                            <X size={24} />
-                        </motion.button>
-
-                        {/* Mobile Menu Content with stagger animation */}
-                        <motion.div 
-                            className="flex flex-col items-center justify-center h-full gap-8"
-                            initial="hidden"
-                            animate="visible"
-                            variants={{
-                                visible: {
-                                    transition: {
-                                        staggerChildren: 0.08,
-                                        delayChildren: 0.1,
-                                    }
-                                }
-                            }}
-                        >
-                            <motion.div
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 }
-                                }}
-                            >
-                                <Link
-                                    href="/"
-                                    className="text-3xl font-display font-bold text-foreground hover:text-white transition-colors"
-                                    onClick={closeMobileMenu}
-                                >
-                                    Home
-                                </Link>
-                            </motion.div>
-                            <motion.div
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 }
-                                }}
-                            >
-                                <Link
-                                    href="/work"
-                                    className="text-3xl font-display font-bold text-foreground hover:text-white transition-colors"
-                                    onClick={closeMobileMenu}
-                                >
-                                    Work
-                                </Link>
-                            </motion.div>
-                            <motion.div
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 }
-                                }}
-                            >
-                                <Link
-                                    href="#thinking"
-                                    className="text-3xl font-display font-bold text-foreground hover:text-white transition-colors"
-                                    onClick={closeMobileMenu}
-                                >
-                                    Philosophy
-                                </Link>
-                            </motion.div>
-                            <motion.div
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 }
-                                }}
-                            >
-                                <a
-                                    href="https://cal.com/autonova-mfsbch/30min"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-4 px-8 py-4 text-lg font-medium rounded-full border border-border bg-foreground text-background hover:bg-white/90 transition-colors"
-                                    onClick={closeMobileMenu}
-                                >
-                                    Book a conversation
-                                </a>
-                            </motion.div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.08,
+                    delayChildren: 0.1,
+                  },
+                },
+              }}
+              className="flex h-[calc(100%-88px)] flex-col items-center justify-center gap-8"
+            >
+              {mobileNavLinks.map((link) => (
+                <motion.div
+                  key={link.href}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    className="text-3xl font-bold text-white transition-colors hover:text-white/80"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                <a
+                  href="https://cal.com/autonova-mfsbch/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 rounded-full border border-white/20 bg-white px-8 py-4 text-lg font-medium text-black transition-colors hover:bg-white/90"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Book a conversation
+                </a>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Navbar>
+  );
 }

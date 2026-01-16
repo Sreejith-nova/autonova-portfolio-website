@@ -3,7 +3,7 @@ import { Container, Heading, Text } from "@/components/ui-primitives";
 import { AudioDemoSection } from "@/components/work/AudioDemoSection";
 import { CreativesGallery } from "@/components/work/CreativesGallery";
 import { WorkflowShowcase } from "@/components/work/WorkflowShowcase";
-import { Navbar } from "@/components/Navbar";
+import { AutonovaNavbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function WorkPage() {
     return (
         <>
-            <Navbar />
+            <AutonovaNavbar />
             <main className="pt-32 pb-24 bg-background min-h-screen">
                 {/* Page Header */}
                 <section className="mb-24">
