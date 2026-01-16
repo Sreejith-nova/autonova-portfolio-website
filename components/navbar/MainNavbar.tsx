@@ -25,9 +25,11 @@ export function MainNavbar() {
     <Navbar>
       <NavBody>
         <NavItems items={navItems} />
-        <NavbarButton href="https://cal.com/autonova-mfsbch/30min" variant="dark">
-          Book a Call
-        </NavbarButton>
+        <div className="relative z-20 ml-auto">
+          <NavbarButton href="https://cal.com/autonova-mfsbch/30min" variant="dark">
+            Book a Call
+          </NavbarButton>
+        </div>
       </NavBody>
 
       <MobileNav>
