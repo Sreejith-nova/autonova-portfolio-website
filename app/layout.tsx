@@ -1,4 +1,5 @@
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { MainNavbar } from "@/components/navbar/MainNavbar";
 import type { Metadata } from "next";
 import { Outfit, Space_Grotesk } from "next/font/google"; // Import Space_Grotesk
 import "./globals.css";
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} ${spaceGrotesk.variable} antialiased`}>
+        <MainNavbar />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
