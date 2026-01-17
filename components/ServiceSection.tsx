@@ -2,6 +2,7 @@
 
 import { Container, Heading, Section, Text } from "./ui-primitives";
 import { motion } from "framer-motion";
+import { memo } from "react";
 
 const services = [
     {
@@ -26,7 +27,7 @@ const services = [
     },
 ];
 
-export function ServiceSection() {
+export const ServiceSection = memo(function ServiceSection() {
     return (
         <Section className="bg-background relative z-10 border-t border-border/10">
             <Container>
@@ -49,6 +50,7 @@ export function ServiceSection() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 viewport={{ once: true }}
+                                style={{ willChange: 'opacity, transform' }}
                                 className="group"
                             >
                                 <h3 className="text-xl md:text-2xl font-medium text-foreground mb-3 group-hover:text-white transition-colors">
@@ -64,4 +66,4 @@ export function ServiceSection() {
             </Container>
         </Section>
     );
-}
+});

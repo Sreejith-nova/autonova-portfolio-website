@@ -1,8 +1,9 @@
 "use client";
 
 import { Container, Heading, Section, Text } from "./ui-primitives";
+import { memo } from "react";
 
-export function PhilosophySection() {
+export const PhilosophySection = memo(function PhilosophySection() {
     return (
         <Section id="thinking" className="bg-background relative z-10 border-t border-border/10">
             <Container className="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -28,4 +29,4 @@ export function PhilosophySection() {
             </Container>
         </Section>
     );
-}
+});

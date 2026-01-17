@@ -1,8 +1,9 @@
 "use client";
 
 import { Container } from "./ui-primitives";
+import { memo } from "react";
 
-export function Footer() {
+export const Footer = memo(function Footer() {
     return (
         <footer className="bg-background py-12 border-t border-border/10">
             <Container className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
@@ -22,4 +23,4 @@ export function Footer() {
             </Container>
         </footer>
     );
-}
+});

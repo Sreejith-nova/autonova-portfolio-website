@@ -3,6 +3,7 @@
 import { Container, Heading, Section, Text } from "./ui-primitives";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { memo } from "react";
 
 const projects = [
     {
@@ -31,7 +32,7 @@ const projects = [
     }
 ];
 
-export function PortfolioSection() {
+export const PortfolioSection = memo(function PortfolioSection() {
     return (
         <Section id="work" className="bg-background relative z-10">
             <Container>
@@ -45,6 +46,7 @@ export function PortfolioSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, ease: "easeOut" }}
                             viewport={{ once: true, margin: "-100px" }}
+                            style={{ willChange: 'opacity, transform' }}
                             className="grid grid-cols-1 lg:grid-cols-12 gap-8 gap-y-12 border-t border-border pt-12"
                         >
                             <div className="lg:col-span-4 space-y-8">
@@ -85,4 +87,4 @@ export function PortfolioSection() {
             </Container>
         </Section>
     );
-}
+});

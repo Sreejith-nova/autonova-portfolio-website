@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
+import { memo } from "react";
 
 interface Workflow {
     id: string;
@@ -33,7 +34,7 @@ const workflows: Workflow[] = [
     },
 ];
 
-export function WorkflowShowcase() {
+export const WorkflowShowcase = memo(function WorkflowShowcase() {
     return (
         <Section className="bg-background relative z-10">
             <Container>
@@ -42,6 +43,7 @@ export function WorkflowShowcase() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
+                    style={{ willChange: 'opacity, transform' }}
                 >
                     <div className="mb-16">
                         <h3 className="text-sm font-medium uppercase tracking-widest text-subtle mb-4">
@@ -60,6 +62,7 @@ export function WorkflowShowcase() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 viewport={{ once: true, margin: "-100px" }}
+                                style={{ willChange: 'opacity, transform' }}
                                 className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start"
                             >
                                 {/* Content */}
@@ -113,4 +116,4 @@ export function WorkflowShowcase() {
             </Container>
         </Section>
     );
-}
+});

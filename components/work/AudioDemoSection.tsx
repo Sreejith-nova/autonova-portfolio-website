@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, memo } from "react";
 import { motion } from "framer-motion";
 import { Container, Heading, Section, Text } from "../ui-primitives";
 
@@ -26,7 +26,7 @@ const audioDemos: AudioDemo[] = [
     }
 ];
 
-export function AudioDemoSection() {
+export const AudioDemoSection = memo(function AudioDemoSection() {
     const [activeAudio, setActiveAudio] = useState<string | null>(null);
     const [audioErrors, setAudioErrors] = useState<{ [key: string]: boolean }>({});
     const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({});
@@ -57,6 +57,7 @@ export function AudioDemoSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
+                    style={{ willChange: 'opacity, transform' }}
                 >
                     <div className="mb-16">
                         <h3 className="text-sm font-medium uppercase tracking-widest text-subtle mb-4">
@@ -75,6 +76,7 @@ export function AudioDemoSection() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: demo.id === "outbound" ? 0.1 : 0 }}
                                 viewport={{ once: true }}
+                                style={{ willChange: 'opacity, transform' }}
                                 className="space-y-6"
                             >
                                 <div>
@@ -118,4 +120,4 @@ export function AudioDemoSection() {
             </Container>
         </Section>
     );
-}
+});

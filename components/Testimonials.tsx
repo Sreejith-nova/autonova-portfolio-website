@@ -1,6 +1,7 @@
 "use client";
 
 import { Container, Heading, Section } from "./ui-primitives";
+import { memo } from "react";
 
 const testimonials = [
     {
@@ -15,7 +16,7 @@ const testimonials = [
     }
 ];
 
-export function Testimonials() {
+export const Testimonials = memo(function Testimonials() {
     return (
         <Section className="bg-background relative z-10">
             <Container>
@@ -35,4 +36,4 @@ export function Testimonials() {
             </Container>
         </Section>
     );
-}
+});

@@ -2,6 +2,7 @@
 
 import { Container, Heading, Section } from "./ui-primitives";
 import { motion } from "framer-motion";
+import { memo } from "react";
 
 const industries = [
     "Real Estate",
@@ -14,7 +15,7 @@ const industries = [
     "Logistics",
 ];
 
-export function IndustriesSection() {
+export const IndustriesSection = memo(function IndustriesSection() {
     return (
         <Section className="bg-background relative z-10 border-t border-border/10">
             <Container>
@@ -31,6 +32,7 @@ export function IndustriesSection() {
                                     whileInView={{ opacity: 1 }}
                                     transition={{ delay: i * 0.05 }}
                                     viewport={{ once: true }}
+                                    style={{ willChange: 'opacity' }}
                                     className="text-3xl md:text-5xl lg:text-6xl text-subtle hover:text-foreground transition-colors cursor-default"
                                 >
                                     {ind}
@@ -42,4 +44,4 @@ export function IndustriesSection() {
             </Container>
         </Section>
     );
-}
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
@@ -83,7 +83,7 @@ const videoCreatives: VideoCreative[] = [
 
 // --- Components ---
 
-export function CreativesGallery() {
+export const CreativesGallery = memo(function CreativesGallery() {
     const [lightboxItem, setLightboxItem] = useState<Creative | null>(null);
 
     const openLightbox = (item: Creative) => {
@@ -114,6 +114,7 @@ export function CreativesGallery() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         viewport={{ once: true }}
+                        style={{ willChange: 'opacity, transform' }}
                     >
                         <h3 className="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-subtle mb-6">
                             AI Creatives
@@ -148,6 +149,7 @@ export function CreativesGallery() {
                         whileInView={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.2 }}
                         viewport={{ once: true }}
+                        style={{ willChange: 'opacity' }}
                         className="mb-12"
                     >
                         <h4 className="text-sm font-medium text-subtle tracking-widest uppercase">Motion & Video</h4>
@@ -172,17 +174,18 @@ export function CreativesGallery() {
             />
         </Section>
     );
-}
+});
 
 // --- Subcomponents ---
 
-function ImageCard({ item, index, onClick }: { item: ImageCreative; index: number; onClick: () => void }) {
+const ImageCard = memo(function ImageCard({ item, index, onClick }: { item: ImageCreative; index: number; onClick: () => void }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
             viewport={{ once: true, margin: "-50px" }}
+            style={{ willChange: 'opacity, transform' }}
             className="group cursor-pointer"
             onClick={onClick}
         >
@@ -214,15 +217,16 @@ function ImageCard({ item, index, onClick }: { item: ImageCreative; index: numbe
             </div>
         </motion.div>
     );
-}
+});
 
-function VideoCard({ item, index, onClick }: { item: VideoCreative; index: number; onClick: () => void }) {
+const VideoCard = memo(function VideoCard({ item, index, onClick }: { item: VideoCreative; index: number; onClick: () => void }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
             viewport={{ once: true, margin: "-50px" }}
+            style={{ willChange: 'opacity, transform' }}
         >
             <button
                 onClick={onClick}
@@ -235,6 +239,7 @@ function VideoCard({ item, index, onClick }: { item: VideoCreative; index: numbe
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                     preload="metadata"
                     muted
+                    playsInline
                 />
 
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500" />
@@ -251,9 +256,9 @@ function VideoCard({ item, index, onClick }: { item: VideoCreative; index: numbe
             </div>
         </motion.div>
     );
-}
+});
 
-function Lightbox({ item, onClose }: { item: Creative | null; onClose: () => void }) {
+const Lightbox = memo(function Lightbox({ item, onClose }: { item: Creative | null; onClose: () => void }) {
     return (
         <AnimatePresence>
             {item && (
@@ -315,4 +320,4 @@ function Lightbox({ item, onClose }: { item: Creative | null; onClose: () => voi
             )}
         </AnimatePresence>
     );
-}
+});
