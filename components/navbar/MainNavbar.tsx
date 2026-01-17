@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useModal } from "@/context/ModalContext";
 import {
   Navbar,
   NavBody,
@@ -14,6 +15,12 @@ import {
 
 export function MainNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isModalOpen } = useModal();
+
+  // Hide navbar completely when modal is open
+  if (isModalOpen) {
+    return null;
+  }
 
   const navItems = [
     { name: "Home", link: "/" },

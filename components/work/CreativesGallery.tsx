@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Container, Heading, Section, Text } from "../ui-primitives";
 import { X, ImageIcon, Play, Maximize2 } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 // --- Types ---
 
@@ -85,16 +86,19 @@ const videoCreatives: VideoCreative[] = [
 
 export const CreativesGallery = memo(function CreativesGallery() {
     const [lightboxItem, setLightboxItem] = useState<Creative | null>(null);
+    const { setIsModalOpen } = useModal();
 
     const openLightbox = (item: Creative) => {
         setLightboxItem(item);
+        setIsModalOpen(true);
         document.body.style.overflow = "hidden";
     };
 
     const closeLightbox = useCallback(() => {
         setLightboxItem(null);
+        setIsModalOpen(false);
         document.body.style.overflow = "auto";
-    }, []);
+    }, [setIsModalOpen]);
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -259,6 +263,20 @@ const VideoCard = memo(function VideoCard({ item, index, onClick }: { item: Vide
 });
 
 const Lightbox = memo(function Lightbox({ item, onClose }: { item: Creative | null; onClose: () => void }) {
+    // Ensure close button always works by using a handler that prevents all event bubbling
+    const handleCloseClick = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+    }, [onClose]);
+
+    const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+        // Only close if clicking the backdrop itself, not its children
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    }, [onClose]);
+
     return (
         <AnimatePresence>
             {item && (
@@ -267,14 +285,24 @@ const Lightbox = memo(function Lightbox({ item, onClose }: { item: Creative | nu
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="fixed inset-0 z-[5000] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm cursor-pointer"
-                    onClick={onClose}
+                    className="fixed inset-0 z-[5000] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm"
+                    onClick={handleBackdropClick}
                     role="dialog"
                     aria-modal="true"
                     aria-label="Media Lightbox"
                 >
+                    {/* Close Button - Positioned absolutely at top right */}
+                    <button
+                        onClick={handleCloseClick}
+                        className="fixed top-6 right-6 z-[5010] p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-black transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white shadow-lg"
+                        aria-label="Close lightbox"
+                        type="button"
+                    >
+                        <X size={32} strokeWidth={2} />
+                    </button>
+
                     <div
-                        className="relative w-full max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center cursor-default"
+                        className="relative w-full max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {item.type === "image" ? (
@@ -288,6 +316,7 @@ const Lightbox = memo(function Lightbox({ item, onClose }: { item: Creative | nu
                                 <video
                                     src={item.src}
                                     controls
+                                    autoPlay
                                     className="max-w-full max-h-[85vh] object-contain shadow-2xl"
                                     preload="auto"
                                     onClick={(e) => e.stopPropagation()}
@@ -303,19 +332,6 @@ const Lightbox = memo(function Lightbox({ item, onClose }: { item: Creative | nu
                             </div>
                         )}
                     </div>
-
-                    {/* Close Button - Placed at end of DOM for stacking safety */}
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onClose();
-                        }}
-                        className="fixed top-6 right-6 z-[5010] p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white"
-                        aria-label="Close"
-                        type="button"
-                    >
-                        <X size={32} strokeWidth={2} />
-                    </button>
                 </motion.div>
             )}
         </AnimatePresence>
