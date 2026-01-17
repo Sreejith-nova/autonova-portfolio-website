@@ -18,7 +18,6 @@ export function MainNavbar() {
   const navItems = [
     { name: "Home", link: "/" },
     { name: "Work", link: "/work" },
-    { name: "Philosophy", link: "#thinking" },
   ];
 
   return (
