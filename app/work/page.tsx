@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     description: "Selected systems and implementations. Real demos, real execution quality.",
 };
 
+const ENABLE_AUDIO_DEMOS = false;
+
 export default function WorkPage() {
     return (
         <>
@@ -29,7 +31,8 @@ export default function WorkPage() {
                 </section>
 
                 {/* AI Voice Callers */}
-                <AudioDemoSection />
+                {/* TEMPORARY: Audio assets not ready. Enable when ready. */}
+                {ENABLE_AUDIO_DEMOS && <AudioDemoSection />}
 
                 {/* AI Creatives Gallery */}
                 <CreativesGallery />
