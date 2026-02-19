@@ -358,6 +358,127 @@ const ASSETS: WorkAsset[] = [
         production: false,
         alt: "Fluid simulation still",
     },
+    // --- SECOND BATCH NEW ASSETS ---
+    {
+        id: "our-new-batch2-1",
+        type: "video",
+        src: "/work/creatives/our%20work/6104930891799207435.mp4",
+        width: 1080,
+        height: 1920, // 9:16
+        title: "Social Motion 1",
+        year: 2025,
+        tags: ["Social", "Motion"],
+        production: false,
+        alt: "Social media motion graphic 1",
+    },
+    {
+        id: "our-new-batch2-2",
+        type: "video",
+        src: "/work/creatives/our%20work/6104930891799207436.mp4",
+        width: 1080,
+        height: 1920, // 9:16
+        title: "Social Motion 2",
+        year: 2025,
+        tags: ["Social", "Motion"],
+        production: false,
+        alt: "Social media motion graphic 2",
+    },
+    {
+        id: "our-new-batch2-3",
+        type: "video",
+        src: "/work/creatives/our%20work/6104930891799207437.mp4",
+        width: 1080,
+        height: 1920, // 9:16
+        title: "Social Motion 3",
+        year: 2025,
+        tags: ["Social", "Motion"],
+        production: false,
+        alt: "Social media motion graphic 3",
+    },
+    {
+        id: "our-new-batch2-4",
+        type: "video",
+        src: "/work/creatives/our%20work/6104930891799207438.mp4",
+        width: 1080,
+        height: 1350, // 4:5
+        title: "Social Motion 4",
+        year: 2025,
+        tags: ["Social", "Motion"],
+        production: false,
+        alt: "Social media motion graphic 4",
+    },
+    {
+        id: "our-new-batch2-5",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200652_121.jpg",
+        width: 1200,
+        height: 1600, // 3:4
+        title: "Concept Render 1",
+        year: 2025,
+        tags: ["Concept", "3D"],
+        production: false,
+        alt: "3D concept render 1",
+    },
+    {
+        id: "our-new-batch2-6",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200653_121.jpg",
+        width: 1200,
+        height: 1600, // 3:4
+        title: "Concept Render 2",
+        year: 2025,
+        tags: ["Concept", "Design"],
+        production: false,
+        alt: "3D concept render 2",
+    },
+    {
+        id: "our-new-batch2-7",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200654_121.jpg",
+        width: 1200,
+        height: 1600, // 3:4
+        title: "Concept Render 3",
+        year: 2025,
+        tags: ["Concept", "Design"],
+        production: false,
+        alt: "3D concept render 3",
+    },
+    {
+        id: "our-new-batch2-8",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200655_121.jpg",
+        width: 1200,
+        height: 1600, // 3:4
+        title: "Concept Render 4",
+        year: 2025,
+        tags: ["Concept", "Art"],
+        production: false,
+        alt: "3D concept render 4",
+    },
+    {
+        id: "our-new-batch2-9",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200656_121.jpg",
+        width: 1600,
+        height: 1200, // 4:3
+        title: "Concept Render 5",
+        year: 2025,
+        tags: ["Concept", "Art"],
+        production: false,
+        alt: "3D concept render 5",
+    },
+    {
+        id: "our-new-batch2-10",
+        type: "image",
+        src: "/work/creatives/our%20work/6104930892259200657_121.jpg",
+        width: 1200,
+        height: 1600, // 3:4
+        title: "Concept Render 6",
+        year: 2025,
+        tags: ["Concept", "Art"],
+        production: false,
+        alt: "3D concept render 6",
+    },
 ];
 
 export const CreativesGallery = memo(function CreativesGallery() {
