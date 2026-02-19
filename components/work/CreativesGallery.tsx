@@ -495,47 +495,8 @@ export const CreativesGallery = memo(function CreativesGallery() {
                 {/* Note: In a real app we might use IntersectionObserver to update URL hash on scroll, 
                     but requirement implies simple anchors are enough. */}
 
-                {/* SECTION: Client Work */}
-                <div id="client" className="mb-32 md:mb-48 scroll-mt-32">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                        >
-                            <span className="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-500 mb-3 block">
-                                Production
-                            </span>
-                            <Heading as="h2" className="text-3xl md:text-5xl font-light tracking-tight">
-                                Client Work
-                            </Heading>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2, duration: 0.8 }}
-                            className="max-w-md"
-                        >
-                            <Text className="text-base text-subtle/80">
-                                Selected commercial campaign deliverables and high-fidelity production assets.
-                            </Text>
-                        </motion.div>
-                    </div>
-
-                    <MasonryGallery
-                        items={clientAssets}
-                        onAssetClick={setLightboxAsset}
-                    />
-                </div>
-
-                {/* Divider (Negative Space) */}
-                <div className="border-t border-white/5 mb-32 md:mb-48" />
-
                 {/* SECTION: Our Work */}
-                <div id="ours" className="mb-20 scroll-mt-32">
+                <div id="ours" className="mb-32 md:mb-48 scroll-mt-32">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -566,6 +527,45 @@ export const CreativesGallery = memo(function CreativesGallery() {
 
                     <MasonryGallery
                         items={ourAssets}
+                        onAssetClick={setLightboxAsset}
+                    />
+                </div>
+
+                {/* Divider (Negative Space) */}
+                <div className="border-t border-white/5 mb-32 md:mb-48" />
+
+                {/* SECTION: Client Work */}
+                <div id="client" className="mb-20 scroll-mt-32">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <span className="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-500 mb-3 block">
+                                Production
+                            </span>
+                            <Heading as="h2" className="text-3xl md:text-5xl font-light tracking-tight">
+                                Client Work
+                            </Heading>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                            className="max-w-md"
+                        >
+                            <Text className="text-base text-subtle/80">
+                                Selected commercial campaign deliverables and high-fidelity production assets.
+                            </Text>
+                        </motion.div>
+                    </div>
+
+                    <MasonryGallery
+                        items={clientAssets}
                         onAssetClick={setLightboxAsset}
                     />
                 </div>
