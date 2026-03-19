@@ -26,10 +26,10 @@ export function HeroMotionCanvas() {
 
     // Smooth the scroll progress for smoother playback
     const smoothProgress = useSpring(scrollYProgress, {
-        mass: 0.1,
-        stiffness: 100,
-        damping: 20,
-        restDelta: 0.001,
+        mass: 0.05,    // lighter = reacts faster
+        stiffness: 200, // stronger spring
+        damping: 12,   // less “softness”
+        restDelta: 0.0005,
     });
 
     // Map scroll progress to frame index
@@ -260,7 +260,8 @@ export function HeroMotionCanvas() {
     }, []);
 
     return (
-        <div ref={containerRef} className="relative h-[400vh] bg-background">
+        // Reduce total scroll distance so the video finishes sooner and the page content comes into view faster
+        <div ref={containerRef} className="relative h-[250vh] bg-background">
             {/* Mobile/tablet overflow fix: ensure sticky container constrains content */}
             <div className="sticky top-0 h-screen w-full overflow-hidden max-w-full">
                 <canvas
